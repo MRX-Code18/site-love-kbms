@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love KBMS - Un detalle especial</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Reenie+Beanie&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #f7f5ee;       /* Fondo crema principal */
+      --text-dark: #0f0f0f;
+      --text-muted: #555555;
+      --accent-orange: #ff7e67;  /* Botón CTA */
+      --badge-bg: #fce8c8;       /* Fondo doradito del badge */
+      --card-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* Manejo de Secciones SPA */
+    .view-section {
+      display: none;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    .view-section.active {
+      display: block;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Botón de Regresar universal */
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 2rem;
+      transition: transform 0.2s;
+    }
+
+    .btn-back:hover {
+      transform: translateX(-5px);
+    }
+
+    /* Navbar - MENÚ CENTRADO */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      position: relative;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
+      z-index: 2;
+    }
+
+    .logo-icon {
+      width: 18px;
+      height: 18px;
+      background-color: #000;
+      border-radius: 4px;
+      transform: rotate(45deg);
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2.2rem;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover {
+      opacity: 0.6;
+    }
+
+    /* Hero Section Portada */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1.5rem 1rem 3rem 1rem;
+      position: relative;
+    }
+
+    .badge {
+      background-color: var(--badge-bg);
+      padding: 0.4rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+      max-width: 650px;
+    }
+
+    .doodle {
+      font-family: 'Reenie Beanie', cursive;
+      font-size: 1.8rem;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      user-select: none;
+    }
+
+    .doodle-right {
+      top: 36%;
+      right: 18%;
+      flex-direction: column;
+      transform: rotate(-5deg);
+    }
+
+    .doodle-left {
+      bottom: -15px;
+      left: -90px;
+      gap: 0.3rem;
+      transform: rotate(-10deg);
+    }
+
+    /* Carrusel de Tarjetas Original */
+    .cards-container {
+      width: 100%;
+      overflow-x: auto;
+      padding: 1.5rem 0 2.5rem 0;
+      scrollbar-width: none;
+    }
+
+    .cards-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cards-track {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      min-width: max-content;
+      padding: 0 2rem;
+    }
+
+    .card {
+      width: 180px;
+      height: 270px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:nth-child(1) { transform: perspective(800px) rotateY(12deg) rotate(-4deg); }
+    .card:nth-child(2) { transform: perspective(800px) rotateY(6deg) rotate(-2deg); }
+    .card:nth-child(3) { transform: perspective(800px) rotateY(2deg); }
+    .card:nth-child(4) { transform: perspective(800px) rotateY(-2deg); }
+    .card:nth-child(5) { transform: perspective(800px) rotateY(-6deg) rotate(2deg); }
+    .card:nth-child(6) { transform: perspective(800px) rotateY(-12deg) rotate(4deg); }
+
+    .card img, .card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.05) !important;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .cta-wrapper {
+      position: relative;
+      margin-top: 1.5rem;
+    }
+
+    .btn-cta {
+      background-color: var(--accent-orange);
+      color: white;
+      border: 2px dashed rgba(255, 255, 255, 0.7);
+      outline: 4px solid var(--accent-orange);
+      padding: 0.9rem 2.8rem;
+      border-radius: 30px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255, 126, 103, 0.4);
+      transition: transform 0.2s ease, background-color 0.3s;
+    }
+
+    .btn-cta.locked {
+      background-color: #a0aec0;
+      outline-color: #a0aec0;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .btn-cta:hover:not(.locked) { transform: scale(1.05); }
+
+    /* VISTA: HISTORY (Zig-Zag) */
+    .history-row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin: 0 auto 2.5rem auto;
+      max-width: 900px;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .history-row.reverse { flex-direction: row-reverse; }
+    .history-img { width: 45%; border-radius: 16px; object-fit: cover; max-height: 320px; }
+    .history-text { width: 55%; font-size: 1rem; line-height: 1.6; }
+
+    /* VISTA: CREATOR */
+    .creator-card {
+      max-width: 750px;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #2d3748;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    }
+    .creator-header { text-align: center; font-size: 2.2rem; font-weight: 800; border-bottom: 2px solid #eee; padding-bottom: 1rem; margin-bottom: 1.8rem; }
+    .creator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
+    .creator-profile-img { width: 100%; border-radius: 12px; }
+
+    /* VISTA: TIME */
+    .time-card {
+      max-width: 750px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    /* VISTA: RECOMMENDATIONS */
+    .recom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .recom-card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 16px;
+      border-left: 5px solid var(--accent-orange);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    }
+
+    /* VISTA: CODE CAROUSEL (MAPA 10 NIVELES) */
+    .map-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem 0;
+    }
+
+    .level-node {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: white;
+      background: #cbd5e0;
+      cursor: not-allowed;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .level-node.unlocked {
+      background: var(--accent-orange);
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255,126,103,0.5);
+    }
+
+    .level-node.boss {
+      background: #805ad5;
+      width: 105px;
+      height: 105px;
+      font-size: 1.6rem;
+    }
+
+    .level-node.unlocked:hover { transform: scale(1.1); }
+
+    /* MODAL FLOTANTE */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.65);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-card-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 24px;
+      max-width: 800px;
+      width: 90%;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      position: relative;
+      transition: box-shadow 0.4s ease;
+    }
+
+    /* ILUMINADO ROJO DIFUMINADO PARA CARTA FINAL */
+    .modal-card-content.red-glow {
+      box-shadow: 0 0 45px rgba(255, 0, 0, 0.85);
+      border: 2px solid rgba(255, 0, 0, 0.5);
+    }
+
+    /* AJUSTE DE LA IMAGEN EN EL MODAL PARA QUE SE VEA COMPLETA */
+    .modal-media { 
+      width: 50%; 
+      border-radius: 16px; 
+      overflow: hidden; 
+      max-height: 420px; 
+      height: auto;
+      background: #f7f5ee;
+      position: relative; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-media img { 
+      width: 100%; 
+      height: 100%; 
+      max-height: 420px;
+      object-fit: contain; /* Muestra la foto completa sin recortar bordes */
+      border-radius: 16px;
+    }
+
+    .modal-media video { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+    }
+
+    .modal-info { width: 50%; text-align: left; }
+
+    /* CANVAS DE RASPADITO EN LA CARTA FINAL */
+    #scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px; right: 20px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      z-index: 20;
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 1rem; flex-direction: column; gap: 1rem; }
+      .nav-links { flex-wrap: wrap; gap: 1rem; }
+      .hero-title { font-size: 2.3rem; }
+      .doodle { display: none; }
+      .history-row, .modal-card-content, .creator-grid { flex-direction: column !important; }
+      .history-img, .history-text, .modal-media, .modal-info { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MENÚ PRINCIPAL ENCABEZADO -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-icon"></span>
+      <strong>Love KBMS</strong>
+    </div>
+
+    <!-- Menú Centrado -->
+    <nav class="nav-links">
+      <a onclick="showView('view-history')">History</a>
+      <a onclick="showView('view-creator')">Creator</a>
+      <a onclick="showView('view-time')">Time</a>
+      <a onclick="showView('view-recommendations')">Recommendation</a>
+      <a onclick="showView('view-code')">Code carousel</a>
+    </nav>
+  </header>
+
+  <!-- VISTA: HOME / PORTADA CON CARRUSEL -->
+  <div id="view-home" class="view-section active">
+    <main class="hero">
+      <div class="badge">
+        <span>Creators MRX for KBMS</span>
+      </div>
+
+      <h1 class="hero-title">
+        Un espacio imaginado para tu agrado mi amor<br>
+        Todo un resumen de nuestro tiempo
+      </h1>
+
+      <p class="hero-subtitle">
+        Aqui podras ver todo de mi para ti mi amor<br>
+        este proyecto lo inice con el fin de hacer feliz a mi noviecita<br>
+        Propiedad de MRX para Karen Belen Martinez Santiago
+      </p>
+
+      <div class="doodle doodle-right">
+        <span>Para ti mi amor</span>
+        <svg width="40" height="40" viewBox="0 0 50 50">
+          <path d="M10 5 Q 35 10, 30 35 M 22 28 L 30 35 L 35 25" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Carrusel de Tarjetas -->
+      <div class="cards-container">
+        <div class="cards-track">
+          <div class="card" onclick="openCardModal('imag/foto7.jpeg', 'Primer obsequio', 'Esto lo estuve elaborando cuando nada mas te conoci, al verte me di cuenta que tienes en tu mochila varios llaveros, aunque tenia miedo de que no entendieras, no sepas que te dare de verdad pense en que deberia hacer algo para la chica que me gusta y espero sea diferente, admito que cuando te lo entregue de verdad me dio mucho miedo que no te gustara pero lo hice con mucho amor para ti.', 'image')">
+            <img src="Imag/foto8.jpeg" alt="Foto 1">
+          </div>
+          
+          <!-- Video Silencioso Autoplay -->
+          <div class="card" onclick="openCardModal('imag/vio1.mp4', 'Primera manualidad', 'La verdad no soy bueno haciendo las manualidades, contigo dejame decirte que son una de las primeras cosas que si puede hacerlos, todo asi como lo pudiste ver aquel dia lo hice yo, realmente queria y quiero hacerte feliz tambien con mis propias manos, quiero construir algo para ver esa hermosa sonrisa que tienes mi amor.', 'video')">
+            <img src="Imag/foto9.jpg" alt="Foto 2">
+          </div>
+
+          <div class="card" onclick="openCardModal('imag/foto10.png', 'Lo que pasa en cada codigo', 'Admito que aveces lo que quiero hacer para ti son complejos y aveces te toma tiempo explorar lo que te mando pero dejame decirte que con cada uno que veo y analizo sigo sin convencerte de verdad eres alguien super hermosa, me gustas mucho de verdad amo todo de ti, aveces hay tropiezos, errores, agotamiento, fallas de mis codigos, sigo trabajando, sigo practicando para ser mucho mejor para que tu tengas mi mejor version de mi para ti mi niña hermosa, TE AMOOOOOO MUCHOOOOOOOOO!!!', 'image')">
+            <img src="Imag/foto4.png" alt="Foto 3">
+          </div>
+          <div class="card" onclick="openCardModal('imag/foto11.png', 'Dedicatorias especiales', 'Tengo que aceptar que cada cosa que se me ocurre, hago, te envio, digo, planeo contigo siempre quiero que estes comoda, bien, feliz y no dudas porque quiero hacerte muy feliz mi amor, sin duda alguna lo quiero hacer, una y mil veces. Cada codigo, por mas poco y con minimas fallas siempre son hechas con amor para mi noviecita hermosa', 'image')">
+            <img src="Imag/foto3.png" alt="Foto 4">
+          </div>
+          <div class="card" onclick="openCardModal('imag/foto12.png', 'Tus gustos', 'Gracias por tener la confianza de contarme sobre tus gustos, preferencias, no sabes cuando me gusto leerte, saber que es lo que te gusta, que prefieres de verdad por eso un dia llegue a programar algo para ti con tus gusto, se que voy haciendo dos HTML con esa tematica, aun siguen incompletos pero creeme pronto estaran mejor que la anterior solo dame tiempo mi amor te hare mucho mas feliz.', 'image')">
+            <img src="Imag/foto5.png" alt="Foto 5">
+          </div>
+          <div class="card" onclick="openCardModal('imag/foto16.png', 'Hacerte feliz', 'En verdad agradezco y espero sea suficiente las cosas minimas no sabes cuanto te amo mi amor encerio mi niña hermosa', 'image')">
+            <img src="Imag/foto6.png" alt="Foto 6">
+          </div>
+        </div>
+      </div>
+
+      <!-- Carta Final con estado Bloqueado/Desbloqueado -->
+      <div class="cta-wrapper">
+        <div class="doodle doodle-left">
+          <svg width="40" height="30" viewBox="0 0 50 40">
+            <path d="M 5 30 Q 20 30, 35 15 M 25 12 L 35 15 L 33 25" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Con amor</span>
+        </div>
+        <button id="btn-final-letter" class="btn-cta locked" onclick="openFinalLetter()">🔒 Carta Final Secreta</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- VISTA: HISTORY -->
+  <div id="view-history" class="view-section">
+    <div style="max-width: 900px; margin: 0 auto;">
+      <button class="btn-back" onclick="showView('view-home')">← Regresar al menú</button>
+      <h2 style="text-align:center; margin-bottom: 2rem; font-size: 2.2rem;">Nuestra Historia</h2>
+      
+      <div class="history-row">
+        <div class="history-text">
+          <h3>Como inició todo</h3>
+          <br>
+          <p>Cuando yo pensaba rendirme, no sabes lo feliz que me siento contigo, lo increible que eres mi amor de verdad eres esa luz que me salvo de todo, tus ojos, tu sonrisa, tu forma de ser, amor encerio amo todo de ti en lo absoluto, nunca crei que podria hacer cosas que no sabia que podria hacer, todo mi amor que tengo siempre sera para ti mi amor porque yo me quedare contigo mi amor "I'll be on the street for you"</p>
+        </div>
+        <img src="imag/foto13.jpg" class="history-img" alt="Foto 1">
+      </div>
+
+      <div class="history-row reverse">
+        <div class="history-text">
+          <h3>Nuestros mejores momentos</h3>
+          <br>
+          <p>Te dare todo mi amor seguire mejorando y esforzandome para ti, te amo con todo mi ser, no pienso dejarte solita no quiero que seas de nadie mas, quiero que seas solo para mi, me gustas, me encantas, me fascinas, con verte solo quiero estar siempre abrazado de ti, quiero sentir tu piel, quiero sentir tus labios, quiero sentir ese calor que solo contigo quiero hacerlo una y otra y otra vez hasta terminar empapado de ti y solo besarte al saber que estoy en un lugar seguro donde tu tambien quiero y me encanta esa intensidad cuando estas excitada amo todo de ti mi amor y no dejare a mi noviecita hermosa.</p>
+        </div>
+        <img src="imag/foto14.jpg" class="history-img" alt="Foto 2">
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA: CREATOR -->
+  <div id="view-creator" class="view-section">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <button class="btn-back" onclick="showView('view-home')">← Regresar al menú</button>
+      <div class="creator-card">
+        <h1 class="creator-header">BIOGRAFÍA DEL CREADOR</h1>
+        <div class="creator-grid">
+          <img src="imag/foto15.jpg" class="creator-profile-img" alt="Foto Creador">
+          <div>
+            <h3 style="margin-bottom: 0.5rem;">BRANDON ANTONIO RODRIGUEZ MENDOZA (MRX)</h3>
+            <p><strong>Para:</strong> Karen Belén Martínez Santiago</p>
+            <br>
+            <p>La vida de Brandon ha resultado en multiples veces muy dificil en el tema de su persona, ahora que conocio a una chica llamada Karen Belen, Brandon se encuentra mas estable, durante su niñes tuvos tiempos algos oscuros pero esta chica la que se menciono lo consiente como si fuera uno, ahora se siente con mas confianza pero no significa que ya no mejore, entre los 11 a 15 años estudio computacion y la ciencias de la computadora para entrar al mundo de la programacion fue dificl pese a su edad era dificil que aprendiera el lenguaje en aquel entonces, al dia de hoy puede manejar lenguaje encuention de dias pero no hace codigo porque si, a esta chica que volvere a mencionar Karen Belen para esa chica crea codigo que realmente es como si fuera una parte de su propio corazon, cada linea, cada copilacion, cada revison, cada diseño, interaccion, documento HTML y liga son un mensaje, es un pedazo de amor tan grande para el que tiene que convencer y hacer de lo que sigue de feliz a esta chica que ella considera como Su noviecita hermosa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA: TIME -->
+  <div id="view-time" class="view-section">
+    <div style="max-width: 750px; margin: 0 auto;">
+      <button class="btn-back" onclick="showView('view-home')">← Regresar al menú</button>
+      <div class="time-card">
+        <h2 style="color: var(--accent-orange); margin-bottom: 0.5rem;">Mi Fecha de Nacimiento</h2>
+        <h3 style="margin-bottom: 1.5rem;">23 de Junio de 2005</h3>
+        <hr style="margin-bottom: 1.5rem; opacity: 0.3;">
+        
+        <h3 style="margin-bottom: 0.5rem;">Un poco sobre mí (cosas breves)</h3>
+        <p style="line-height: 1.6; color: var(--text-muted); margin-bottom: 2rem;">
+          Tengo muchos planes contigo mi amor, de verdad, como por ejemplo, ir a comer algo, salir al cine, hacer algo juntos, quiero cocinar algo contigo no acabaria de decirte todas las cosas que quiero hacer contigo mi amor. Quiero casarme contigo
+        </p>
+
+        <h3 style="margin-bottom: 0.8rem;">Cosas que me encantan de mi noviecita ❤️</h3>
+        <ul style="line-height: 1.8; padding-left: 1.2rem; color: var(--text-dark);">
+          <li>Tu sonrisa y la forma en que me alegras los días.</li>
+          <li>Tu apoyo incondicional en cada proyecto y meta que tengas.</li>
+          <li>Tus ojitos.</li>
+          <li>Tu forma de ser.</li>
+          <li>Tu forma de amarme.</li>
+          <li>Tu intensidad</li>
+          <li>Tu cuerpo</li>
+          <li>Tus manos</li>
+          <li>Tu calor que puedo sentirlo al entrar en ti.</li>
+          <li>Tus besos.</li>
+          <li>Pasar tiempo contigo.</li>
+          <li>Tu voz.</li>
+          <li>Mis amigas jsjsjs.</li>
+          <li>Todo en lo absoluto.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA: RECOMMENDATIONS -->
+  <div id="view-recommendations" class="view-section">
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <button class="btn-back" onclick="showView('view-home')">← Regresar al menú</button>
+      <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">Recordatorios para mi Amor</h2>
+      
+      <div class="recom-grid">
+        <div class="recom-card"><h4>#1</h4><p>Cuídate bien mi amor.</p></div>
+        <div class="recom-card"><h4>#2</h4><p>Recuerda comer a tus horas.</p></div>
+        <div class="recom-card"><h4>#3</h4><p>Toma suficiente agua durante el día.</p></div>
+        <div class="recom-card"><h4>#4</h4><p>Descansa cuando te sientas cansada.</p></div>
+        <div class="recom-card"><h4>#5</h4><p>Nunca olvides lo mucho que te amo.</p></div>
+        <div class="recom-card"><h4>#6</h4><p>Sonríe siempre, te ves hermosa.</p></div>
+        <div class="recom-card"><h4>#7</h4><p>Confía en ti y en todo lo que haces.</p></div>
+        <div class="recom-card"><h4>#8</h4><p>Estoy para ti en todo momento.</p></div>
+        <div class="recom-card"><h4>#9</h4><p>Eres la persona más especial para mí.</p></div>
+        <div class="recom-card"><h4>#10</h4><p>Gracias por estar en mi vida.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA: CODE CAROUSEL (MAPA 10 NIVELES) -->
+  <div id="view-code" class="view-section">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <button class="btn-back" onclick="showView('view-home')">← Regresar al menú</button>
+      <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 2rem;">Ruta de Códigos</h2>
+      <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Completa cada nivel para desbloquear el siguiente</p>
+      
+      <div class="map-container">
+        <div class="level-node unlocked" onclick="openLevelModal(1)">1</div>
+        <div class="level-node" id="level-2" onclick="openLevelModal(2)">🔒 2</div>
+        <div class="level-node" id="level-3" onclick="openLevelModal(3)">🔒 3</div>
+        <div class="level-node" id="level-4" onclick="openLevelModal(4)">🔒 4</div>
+        <div class="level-node" id="level-5" onclick="openLevelModal(5)">🔒 5</div>
+        <div class="level-node" id="level-6" onclick="openLevelModal(6)">🔒 6</div>
+        <div class="level-node" id="level-7" onclick="openLevelModal(7)">🔒 7</div>
+        <div class="level-node" id="level-8" onclick="openLevelModal(8)">🔒 8</div>
+        <div class="level-node" id="level-9" onclick="openLevelModal(9)">🔒 9</div>
+        <div class="level-node boss" id="level-10" onclick="openLevelModal(10)">👑 BOSS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GENERAL -->
+  <div id="app-modal" class="modal-overlay">
+    <div class="modal-card-content" id="modal-card-box">
+      <button class="close-modal" onclick="closeModal()">×</button>
+      
+      <div class="modal-media" id="modal-media-box">
+        <!-- Media dinámico (Video / Foto) -->
+      </div>
+
+      <div class="modal-info">
+        <h3 id="modal-title" style="margin-bottom: 1rem; font-size: 1.5rem;">Título</h3>
+        <p id="modal-desc" style="line-height: 1.6; color: var(--text-muted);">Descripción aquí...</p>
+        <br>
+        <button id="modal-action-btn" class="btn-back" style="display:none; margin-top: 1rem;" onclick="unlockNextLevel()">Completar y Desbloquear Siguiente</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Registro de Secciones Visitadas para desbloquear la Carta Final
+    const visitedSections = new Set(JSON.parse(localStorage.getItem('visitedSections') || '[]'));
+
+    function checkFinalUnlock() {
+      const required = ['view-history', 'view-creator', 'view-time', 'view-recommendations', 'view-code', 'boss-cleared'];
+      const allDone = required.every(req => visitedSections.has(req));
+      
+      const btn = document.getElementById('btn-final-letter');
+      if (allDone) {
+        btn.classList.remove('locked');
+        btn.innerHTML = "✉️ Abrir Carta Final Secreta";
+      } else {
+        btn.classList.add('locked');
+        btn.innerHTML = "🔒 Carta Final Secreta";
+      }
+    }
+
+    // Navegación entre Vistas
+    function showView(viewId) {
+      document.querySelectorAll('.view-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(viewId).classList.add('active');
+      window.scrollTo(0, 0);
+
+      // Guardar visita de la sección
+      if (viewId !== 'view-home') {
+        visitedSections.add(viewId);
+        localStorage.setItem('visitedSections', JSON.stringify(Array.from(visitedSections)));
+        checkFinalUnlock();
+      }
+    }
+
+    // Abrir Modal para Tarjetas del Carrusel
+    function openCardModal(mediaPath, title, desc, mediaType = 'image') {
+      document.getElementById('modal-card-box').classList.remove('red-glow');
+      const mediaBox = document.getElementById('modal-media-box');
+      if (mediaType === 'video') {
+        mediaBox.innerHTML = `<video src="${mediaPath}" autoplay muted loop playsinline controls style="width:100%; height:100%; object-fit:cover;"></video>`;
+      } else {
+        mediaBox.innerHTML = `<img src="${mediaPath}" alt="${title}">`;
+      }
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-desc').innerText = desc;
+      document.getElementById('modal-action-btn').style.display = 'none';
+      document.getElementById('app-modal').style.display = 'flex';
+    }
+
+    // Modal para los 10 Niveles de Código (Carga codes/vi1.mp4 a codes/vi10.mp4)
+    let currentLvl = 1;
+    function openLevelModal(lvl) {
+      document.getElementById('modal-card-box').classList.remove('red-glow');
+      const node = document.getElementById(lvl === 1 ? '' : 'level-' + lvl);
+      if (lvl > 1 && node && !node.classList.contains('unlocked')) {
+        alert("¡Debes completar el nivel anterior para desbloquear este!");
+        return;
+      }
+
+      currentLvl = lvl;
+      const mediaBox = document.getElementById('modal-media-box');
+      
+      mediaBox.innerHTML = `<video src="codes/vi${lvl}.mp4" controls autoplay loop style="width:100%; height:100%; object-fit:cover;"></video>`;
+
+      document.getElementById('modal-title').innerText = lvl === 10 ? "👑 NIVEL BOSS FINAL" : "Código Nivel " + lvl;
+      document.getElementById('modal-desc').innerText = `Proyecto de Código #${lvl}. Aquí se muestra el recorrido en video del regalo que programé para ti.`;
+      document.getElementById('modal-action-btn').style.display = 'inline-flex';
+      document.getElementById('app-modal').style.display = 'flex';
+    }
+
+    // Desbloquear Nivel Siguiente
+    function unlockNextLevel() {
+      closeModal();
+      if (currentLvl === 10) {
+        visitedSections.add('boss-cleared');
+        localStorage.setItem('visitedSections', JSON.stringify(Array.from(visitedSections)));
+        checkFinalUnlock();
+        alert("¡Felicidades mi amor! Has completado todos los niveles de código.");
+        return;
+      }
+
+      let nextLvl = currentLvl + 1;
+      let nextNode = document.getElementById('level-' + nextLvl);
+      if (nextNode) {
+        nextNode.classList.add('unlocked');
+        nextNode.innerText = nextLvl === 10 ? "👑 BOSS" : nextLvl;
+      }
+    }
+
+    // Carta Final al Desbloquear Todo con RASPADITO Y PREGUNTAS DE CONFIRMACIÓN
+    function openFinalLetter() {
+      const btn = document.getElementById('btn-final-letter');
+      if (btn.classList.contains('locked')) {
+        alert("🔒 Esta carta secreta está bloqueada. Para abrirla, debes explorar todas las secciones (History, Creator, Time, Recommendation) y llegar al Nivel Boss de Code Carousel.");
+        return;
+      }
+
+      // 1. Efecto Iluminado Rojo Difuminado
+      document.getElementById('modal-card-box').classList.add('red-glow');
+
+      // 2. Cargar Video con Audio + Canvas Encima
+      const mediaBox = document.getElementById('modal-media-box');
+      mediaBox.innerHTML = `
+        <video id="final-video" src="codes/vi11.mp4" controls playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+        <canvas id="scratch-canvas"></canvas>
+      `;
+
+      document.getElementById('modal-title').innerText = "✉️ Para el Amor de mi Vida";
+      document.getElementById('modal-desc').innerText = "Gracias por recorrer cada rincón de este proyecto hecho para ti mi amor. Eres lo más especial que me ha pasado y cada hora escribiendo código valió la pena solo para sacarte una hermosa sonrisa. Te amo infinitamente, Karen Belén pero espera que aun falta algo.";
+      document.getElementById('modal-action-btn').style.display = 'none';
+      document.getElementById('app-modal').style.display = 'flex';
+
+      // 3. Inicializar Lógica del Canvas Raspadito
+      setTimeout(initScratchCanvas, 100);
+    }
+
+    function initScratchCanvas() {
+      const canvas = document.getElementById('scratch-canvas');
+      if (!canvas) return;
+
+      const video = document.getElementById('final-video');
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      
+      canvas.width = rect.width || 300;
+      canvas.height = rect.height || 400;
+
+      // Dibujar capa gris con texto del raspadito
+      ctx.fillStyle = '#718096';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('Rasca para descubrir lo último', canvas.width / 2, canvas.height / 2 - 10);
+      ctx.fillText('de este sitio web ✨', canvas.width / 2, canvas.height / 2 + 15);
+
+      let isDrawing = false;
+      let askedConfirmation = false;
+
+      function scratch(e) {
+        if (!isDrawing) return;
+        
+        const cRect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        const x = clientX - cRect.left;
+        const y = clientY - cRect.top;
+
+        // Pincel fino/pequeño (15px)
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 15, 0, Math.PI * 2);
+        ctx.fill();
+
+        checkScratchProgress();
+      }
+
+      function checkScratchProgress() {
+        // Calcular porcentaje rascado
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let pixels = imageData.data;
+        let clearPixels = 0;
+
+        for (let i = 3; i < pixels.length; i += 4) {
+          if (pixels[i] === 0) clearPixels++;
+        }
+
+        let percentage = (clearPixels / (pixels.length / 4)) * 100;
+
+        // Preguntar si está segura cuando lleve el 25% rascado
+        if (percentage > 25 && !askedConfirmation) {
+          isDrawing = false;
+          askedConfirmation = true;
+          
+          askAreYouSure(function() {
+            // Si responde SÍ, puede continuar rascando
+            isDrawing = false;
+          });
+        }
+
+        // Si despeja más del 65%, se revela todo y se reproduce el video con audio
+        if (percentage > 65) {
+          canvas.style.display = 'none';
+          if (video) {
+            video.muted = false;
+            video.play().catch(e => console.log("Reproducción manual por navegador:", e));
+          }
+        }
+      }
+
+      function askAreYouSure(onYesCallback) {
+        let sure = confirm("¿Estás segura de querer continuar descubriendo lo último?");
+        while (!sure) {
+          sure = confirm("¿De verdad estás segura? ¡Respóndeme que sí mi amor!");
+        }
+        if (onYesCallback) onYesCallback();
+      }
+
+      // Eventos Mouse/Touch
+      canvas.addEventListener('mousedown', () => isDrawing = true);
+      canvas.addEventListener('mouseup', () => isDrawing = false);
+      canvas.addEventListener('mousemove', scratch);
+
+      canvas.addEventListener('touchstart', () => isDrawing = true);
+      canvas.addEventListener('touchend', () => isDrawing = false);
+      canvas.addEventListener('touchmove', scratch);
+    }
+
+    function closeModal() {
+      document.getElementById('app-modal').style.display = 'none';
+      document.getElementById('modal-card-box').classList.remove('red-glow');
+      const mediaBox = document.getElementById('modal-media-box');
+      mediaBox.innerHTML = '';
+    }
+
+    // Comprobar estado al cargar la página
+    checkFinalUnlock();
+  </script>
+</body>
+</html>
